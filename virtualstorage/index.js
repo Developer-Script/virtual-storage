@@ -20,35 +20,19 @@ class STORAGE
       }
     }
   }
+
   query (prop)
   {
     if (prop)
     {
-      if (!(this.QUERY_COUNT)) this.QUERY_COUNT = 0
-      this.QUERY_COUNT ++
-
-      if (!(this.QUERY)) this.QUERY = []
-      this.QUERY[this.QUERY_COUNT] = {}
-
-      const drive = this.queryDrive (prop.drive)
-
-      console.log (drive)
-    
-      return this.QUERY[this.QUERY_COUNT]
-    }
-  }
-
-  queryDrive (drive)
-  {
-    let dirKeys
-    
-
-    if (this.DIRECTORY)
-    {
+      //if prop obj has data, proceed.
       
     }
-
-    return dirKeys
+    else
+    {
+      //if prop obj has no data, do not proceed.
+      console.log ("Error: No data entered.")
+    }
   }
 }
 module.exports = STORAGE

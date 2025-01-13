@@ -21,7 +21,7 @@ const core = vs.query (
   {
     tag : "C:",
     name : "virtualstorage",
-    test : "messy"
+    folders : "messy"
   }
 })
 
