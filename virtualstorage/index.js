@@ -25,41 +25,53 @@ class STORAGE
   {
     if (prop)
     {
-      let Results
-      if (prop.directory) Results = this.getDirectory (prop.directory)
-      
+      let Results = []
+      if (prop.directory)
+      {
+        const result = this.getDirectory (prop.directory)
+
+        for (let yz in result)
+        {
+          if (result[yz] != null)
+          {
+            Results.push (result[yz])
+          }
+        }
+      }
+
+      if (prop.folder) Results = this.getFolder (prop.folder)
+
       return Results || "Pending Query"
     }
-    else
-    {
-      //if prop obj has no data, do not proceed.
-      console.log ("Error: No data entered.")
-    }
+  }
+
+  getFolder (ifol)
+  {
+
   }
 
   getDirectory (idir)
   {
-    let Results
-    let idirCount = Object.keys (idir).length
-
-    if (idirCount == 0) Results = this.DIRECTORY
+    let Results = []
 
     if (idir)
     {
       for (let xx in this.DIRECTORY)
       {
-        Results = this.setKeys (idir, idirCount, xx, this.DIRECTORY[xx])
+        Results.push (this.setKeys (idir, xx, this.DIRECTORY[xx]))
       }
     }
-    return Results || "Pending Drive Selection" 
+
+    return Results || null
   }
 
-  setKeys (idir, idirCount, oindex, directory)
+  setKeys (idir, oindex, directory)
   {
-    let Results = []
+    let Results
     let okeys = []
     let ikeys = []
     let iomatch = []
+    let iovals = []
 
     for (let yy in directory)
     {
@@ -82,11 +94,23 @@ class STORAGE
       }
     }
 
-    console.log (iomatch)
+    if (iomatch.length == ikeys.length)
+    {
+      for (let dd in iomatch)
+      {
+        if (idir[(iomatch[dd]).toLowerCase ()] == directory[iomatch[dd]])
+        {
+          iovals.push (directory[iomatch[dd]])
+        }
+      }
+    }
+ 
+    if (iovals.length == iomatch.length)
+    {
+      Results = directory
+    }
 
-    //Results.push (iomatch)
-
-    return Results || "Pending Key Comparision."
+    return Results || null
   }
 }
 module.exports = STORAGE

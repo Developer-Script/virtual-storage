@@ -3,14 +3,14 @@ const vs = new VS
 
 vs.map (
 {
-  tag : "C:",
+  tag : "D:",
   path : `${__dirname}/test`
 })
 
 
 vs.map (
 {
-  tag : "D:",
+  tag : "C:",
   path : `${__dirname}/virtualstorage`
 })
 
@@ -20,9 +20,10 @@ const core = vs.query (
   directory :
   {
     tag : "C:",
-    name : "virtualstorage",
-    folders : "messy"
+  },
+  folder :
+  {
   }
 })
 
-console.dir (core, {depth: 7})
+console.dir (core, {depth: 2})
