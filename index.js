@@ -17,7 +17,7 @@ vs.map (
 
 const core = vs.query (
 {
-  drive :
+  directory :
   {
     tag : "C:",
     name : "virtualstorage",
