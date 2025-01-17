@@ -19,10 +19,7 @@ const core = vs.query (
 {
   directory :
   {
-    tag : "C:",
-  },
-  folder :
-  {
+    tag : "C:"
   }
 })
 

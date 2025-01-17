@@ -39,7 +39,8 @@ class STORAGE
         }
       }
 
-      if (prop.folder) Results = this.getFolder (prop.folder)
+      if (prop.folder && Results.length != 0) Results = this.getFolderFromDir (prop.folder, Results)
+      //else Results = this.getFolder (prop.folder)
 
       return Results || "Pending Query"
     }
@@ -47,7 +48,14 @@ class STORAGE
 
   getFolder (ifol)
   {
+    console.log ("No")
+  }
 
+  getFolderFromDir (ifol, directory)
+  {
+    let Results
+
+    console.log ("Yes")
   }
 
   getDirectory (idir)
