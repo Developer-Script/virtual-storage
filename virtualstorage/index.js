@@ -26,6 +26,7 @@ class STORAGE
     if (prop)
     {
       let Results = []
+
       if (prop.directory)
       {
         const result = this.getDirectory (prop.directory)
@@ -36,26 +37,100 @@ class STORAGE
           {
             Results.push (result[yz])
           }
+          else Results = null
         }
       }
 
-      if (prop.folder && Results.length != 0) Results = this.getFolderFromDir (prop.folder, Results)
-      //else Results = this.getFolder (prop.folder)
+      if (prop.folder) 
+      {
+        const result = this.getFolderFromDir (prop.folder, Results)
+        
+        for (let yz in result)
+        {
+          if (result[yz] != null)
+          {
+            Results = null
+            Results = []
+            Results.push (result[yz])
+          }
+          else Results = null
+        }
+      }
 
-      return Results || "Pending Query"
+      return Results
     }
-  }
-
-  getFolder (ifol)
-  {
-    console.log ("No")
   }
 
   getFolderFromDir (ifol, directory)
   {
-    let Results
+    let Results = []
 
-    console.log ("Yes")
+    let ifolCount = Object.keys(ifol).length
+    let dirCount = directory.length
+    
+    for (let aa in directory)
+    {
+      Results.push (this.searchFolder (ifol, directory[aa]))
+    }
+
+    return Results
+  }
+
+  searchFolder (ifol, directory)
+  {
+    let Results = []
+
+    Results = this.recur (directory, ifol, Results)
+
+    return Results
+  }
+
+  recur (directory, ifol, arr)
+  {
+    if (directory.FOLDERS)
+    {
+      let ifoldKeys = []
+      let iomatch = []
+      let ioCount = 0
+      let ifoldCount = Object.keys (ifol).length
+
+      for (let ww in ifol)
+      {
+        ifoldKeys.push (ww.toUpperCase ())
+      }
+
+      for (let qq in directory.FOLDERS)
+      { 
+        for (let aa in directory.FOLDERS[qq])
+        {
+          for (let bb in ifoldKeys)
+          {
+            if (aa == ifoldKeys[bb])
+            {
+              iomatch.push (aa)
+            }
+          }
+        }
+
+        ioCount = iomatch.length
+
+        if (ioCount == ifoldCount)
+        {
+          arr = this.setValues (directory.FOLDERS[qq].NAME, ifol)
+        }
+
+        this.recur (directory.FOLDERS[qq], ifol, arr)
+      }
+    }
+
+    return arr
+  }
+
+  setValues (match, ifol)
+  {
+    //console.log (match)
+
+    return match
   }
 
   getDirectory (idir)
