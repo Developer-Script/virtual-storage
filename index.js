@@ -17,16 +17,7 @@ vs.map (
 
 const core = vs.query (
 {
-  directory :
-  {
-    tag : "C:"
-  },
-  folder :
-  {
-    name : "fold",
-    root : "./",
-    files : ""
-  }
+  directory : {}
 })
 
 console.dir (core, {depth: 4})
