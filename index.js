@@ -4,6 +4,7 @@ const vs = new VS
 vs.map (
 {
   tag : "C:",
+  password : "Clean.12",
   path : `${__dirname}/test`
 })
 
@@ -11,13 +12,19 @@ vs.map (
 vs.map (
 {
   tag : "C:",
+  //password : "Clean.12",
   path : `${__dirname}/virtualstorage`
 })
 
 
 const core = vs.query (
 {
-  directory : {}
+  directory :
+  {
+    tag : "C:",
+    password : "Clean.12", 
+    //root : "/"
+  }
 })
 
 console.dir (core, {depth: 4})
