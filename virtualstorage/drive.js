@@ -16,6 +16,7 @@ class DRIVE
     {
       if (prop.tag) this.TAG = prop.tag
       if (prop.password) this.PASSWORD = prop.password
+      if (prop.username) this.USERNAME = prop.username
       if (prop.path) this.map (prop.path)
     }
   }
