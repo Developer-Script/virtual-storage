@@ -27,6 +27,7 @@ class STORAGE
   {
     let result = "PENDING"
     let qDirSet = false
+    let qFilSet = false
     let newProp
 
     if (typeof (prop) != "object") result = "Error: Variable is not an Object";
@@ -50,11 +51,16 @@ class STORAGE
         if (x == "FILE" && qDirSet)
         {
           result = this.getFile (newProp[x], result)
+          qFilSet = true
         }
 
-        if (x == "GET" && qDirSet)
+        if (x == "GET" && qDirSet && !qFilSet)
         {
-          result = this.getVals (newProp[x], result)  //Working here
+          result = this.getVals (newProp[x], result)
+        }
+        else if (x == "GET" && qDirSet && qFilSet)
+        {
+          result = this.getValsV2 (newProp[x], result)
         }
       }
     }
@@ -65,16 +71,16 @@ class STORAGE
     return result
   }
 
-  getVals (qGet, obj)
+  getValsV2 (qGet, obj)
   {
     let result = []
     let res = []
-    console.log (qGet)
-    if (Array.isArray(qGet) == false) result = "Error: Get variable is not an Array.";
-    else if (qGet.length == 0) result = "Error: No data entered to specify Getter";
-    else if (qGet.length >= 1)
+
+    if (typeof (qGet) != "object") result = "Error: Getter variable is not an Array.";
+    else if (Object.keys(qGet).length == 0) result = "Error: No data entered to specify Getter";
+    else if (Object.keys(qGet).length >= 1)
     {
-      for (let index in vFol) res.push (this.getFilLoop(qFil, vFol[index]));
+      result.push (this.getKeys2 (qGet, obj))
     }
 
     for (let index in res)
@@ -84,6 +90,124 @@ class STORAGE
         if (res[index][index2] != null) result.push (res[index][index2]);
       }
     }
+
+    return result
+  }
+
+  getKeys2 (qGet, obj)
+  {
+    let result = []
+    let newqGet = []
+
+    for (let x in qGet)
+    {
+      newqGet.push (qGet[x].toUpperCase ())
+    }
+
+    for (let index in obj)
+    {
+      result.push (this.setGetVals (newqGet, obj[index]))
+    }
+
+    return result
+  }
+
+  setGetVals (qGet, obj)
+  { 
+    let result = {}
+
+    for (let key in obj)
+    {
+      for (let index in qGet)
+      {
+        if (key == qGet[index])
+        {
+          result[key] = obj[key]
+        }
+      }
+    }
+
+    return result
+  }
+
+  getVals (qGet, obj)
+  {
+    let result = []
+    let res = []
+
+    if (typeof (qGet) != "object") result = "Error: Getter variable is not an Array.";
+    else if (Object.keys(qGet).length == 0) result = "Error: No data entered to specify Getter";
+    else if (Object.keys(qGet).length >= 1)
+    {
+      result.push (this.getVals2 (qGet, obj))
+    }
+
+    for (let index in res)
+    {
+      for (let index2 in res[index])
+      {
+        if (res[index][index2] != null) result.push (res[index][index2]);
+      }
+    }
+
+    return result
+  }
+
+  getVals2 (qGet, obj)
+  {
+    let result = []
+    let newqGet = []
+
+    for (let z in qGet)
+    {
+      newqGet.push (qGet[z].toUpperCase ())
+    }
+
+    for (let x in obj)
+    {
+      result.push (this.getLoop (newqGet, obj[x]))
+    }
+
+    return result
+  }
+
+  getLoop (qGet, obj, loop)
+  {
+    let result = []
+
+    if (loop) result = loop
+
+    for (let d in obj.FILES)
+    {
+      result.push (this.getKeys (qGet, obj.FILES[d]))
+    }
+
+    for (let c in obj.FOLDERS)
+    {
+      result.push (this.getKeys (qGet, obj.FOLDERS[c]))
+
+      this.getLoop (qGet, obj.FOLDERS[c], result)
+    }
+
+    return result
+  }
+
+  getKeys (qGet, obj)
+  {
+    let result = {}
+
+    for (let key in obj)
+    {
+      for (let index in qGet)
+      {
+        if (key == qGet[index])
+        {
+          result[key] = obj[key]
+        }
+      }
+    }
+
+    return result
   }
 
   capLoop (obj, loop)
@@ -103,6 +227,7 @@ class STORAGE
 
         this.capLoop (obj[b], result[b.toUpperCase ()])
       }
+      
     }
 
     return result

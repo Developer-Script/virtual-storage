@@ -12,7 +12,7 @@ vs.map (
 
 vs.map (
 {
-  tag : "C:",
+  tag : "D:",
   username : "Moon",
   password : "Clean.12",
   path : `${__dirname}/virtualstorage`
@@ -23,19 +23,11 @@ const core = vs.query (
 {
   directORY :
   {
-    tAg : "C:",
+    tAg : "D:",
     username : "Moon",
     password : "Clean.12"
   },
-  folder :
-  {
-    name : "fold"
-  },
-  file :
-  {
-    name : "file",
-  },
-  get : "Hello"
+  get : ['name', 'content']
 })
 
-console.dir (core, {depth: 2})
+console.dir (core, {depth: 5})
