@@ -27,7 +27,11 @@ const core = vs.query (
     username : "Moon",
     password : "Clean.12"
   },
-  get : ['name', 'content']
+  file :
+  {
+    ext : ".js"
+  },
+  get : ['name', 'content', 'dir', 'root']
 })
 
 console.dir (core, {depth: 5})

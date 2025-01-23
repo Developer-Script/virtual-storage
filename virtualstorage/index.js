@@ -71,6 +71,7 @@ class STORAGE
     return result
   }
 
+//selector of key, val pairs wanted in query...
   getValsV2 (qGet, obj)
   {
     let result = []
@@ -80,7 +81,7 @@ class STORAGE
     else if (Object.keys(qGet).length == 0) result = "Error: No data entered to specify Getter";
     else if (Object.keys(qGet).length >= 1)
     {
-      result.push (this.getKeys2 (qGet, obj))
+      res.push (this.getKeys2 (qGet, obj))
     }
 
     for (let index in res)
@@ -139,14 +140,17 @@ class STORAGE
     else if (Object.keys(qGet).length == 0) result = "Error: No data entered to specify Getter";
     else if (Object.keys(qGet).length >= 1)
     {
-      result.push (this.getVals2 (qGet, obj))
+      res.push (this.getVals2 (qGet, obj))
     }
 
     for (let index in res)
     {
       for (let index2 in res[index])
       {
-        if (res[index][index2] != null) result.push (res[index][index2]);
+        for (let index3 in res[index][index2])
+        {
+          if (res[index][index2][index3] != null) result.push (res[index][index2][index3]);
+        }
       }
     }
 
@@ -210,12 +214,12 @@ class STORAGE
     return result
   }
 
+//capitalizing keys in an object / loop...
   capLoop (obj, loop)
   {
     let result = {}
 
     if (loop) result = loop
-
 
     for (let b in obj)
     {
@@ -227,12 +231,12 @@ class STORAGE
 
         this.capLoop (obj[b], result[b.toUpperCase ()])
       }
-      
     }
 
     return result
   }
 
+// querying file code
   getFile (qFil, vFol)
   {
     let result = []
@@ -292,13 +296,13 @@ class STORAGE
       {
         if (qFilKeys[index] == keys && qFil[qFilKeys[index]] == obj[keys]) matchVals.push (obj[keys]);
       }
-      
     }
 
     if (qFilKeys.length >= matchVals.length && matchVals.length >= 1) return obj;
     else return null;
   }
 
+//querying folder code...
   getFolder (qFol, vFol)
   {
     let result = []
@@ -355,13 +359,13 @@ class STORAGE
       {
         if (qFolKeys[index] == keys && qFol[qFolKeys[index]] == obj[keys]) matchVals.push (obj[keys]);
       }
-      
     }
 
     if (qFolKeys.length >= matchVals.length && matchVals.length >= 1) return obj;
     else return null;
   }
 
+// Directory/ drive querying code.
   getDirectory (qDir, vDir)
   {
     let result = []
