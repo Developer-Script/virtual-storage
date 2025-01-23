@@ -27,32 +27,83 @@ class STORAGE
   {
     let result = "PENDING"
     let qDirSet = false
+    let newProp
 
     if (typeof (prop) != "object") result = "Error: Variable is not an Object";
     else if (Object.keys (prop).length >= 1)
     {
-      for (let x in prop)
+      newProp = this.capLoop (prop)
+
+       for (let x in newProp)
       {
-        if (x.toUpperCase () == "DIRECTORY")
+        if (x == "DIRECTORY")
         {
-          result = this.getDirectory (prop[x], this.DIRECTORY);
+          result = this.getDirectory (newProp[x], this.DIRECTORY);
           qDirSet = true
         }
         
-        if (x.toUpperCase () == "FOLDER" && qDirSet)
+        if (x == "FOLDER" && qDirSet)
         {
-          result = this.getFolder (prop[x], result)
+          result = this.getFolder (newProp[x], result)
         }
 
-        if (x.toUpperCase () == "FILE" && qDirSet)
+        if (x == "FILE" && qDirSet)
         {
-          result = this.getFile (prop[x], result)
+          result = this.getFile (newProp[x], result)
+        }
+
+        if (x == "GET" && qDirSet)
+        {
+          result = this.getVals (newProp[x], result)  //Working here
         }
       }
     }
     else if (Object.keys (prop).length == 0) result = "Error: No data entered.";
 
     if (!(qDirSet)) result = "Error: Directory data is not provided."
+
+    return result
+  }
+
+  getVals (qGet, obj)
+  {
+    let result = []
+    let res = []
+    console.log (qGet)
+    if (Array.isArray(qGet) == false) result = "Error: Get variable is not an Array.";
+    else if (qGet.length == 0) result = "Error: No data entered to specify Getter";
+    else if (qGet.length >= 1)
+    {
+      for (let index in vFol) res.push (this.getFilLoop(qFil, vFol[index]));
+    }
+
+    for (let index in res)
+    {
+      for (let index2 in res[index])
+      {
+        if (res[index][index2] != null) result.push (res[index][index2]);
+      }
+    }
+  }
+
+  capLoop (obj, loop)
+  {
+    let result = {}
+
+    if (loop) result = loop
+
+
+    for (let b in obj)
+    {
+      result[b.toUpperCase ()] = obj[b]
+
+      if (typeof(obj[b]) == "object")
+      {
+        result[b.toUpperCase ()] = {}
+
+        this.capLoop (obj[b], result[b.toUpperCase ()])
+      }
+    }
 
     return result
   }
@@ -66,7 +117,7 @@ class STORAGE
     else if (Object.keys (qFil).length == 0) result = "Error: No data entered to specify File";
     else if (Object.keys (qFil).length >= 1)
     {
-      for (let index in vFol) res.push (this.getFilLoop(qFil, vFol[index].FILES));
+      for (let index in vFol) res.push (this.getFilLoop(qFil, vFol[index]));
     }
 
     for (let index in res)
@@ -78,6 +129,49 @@ class STORAGE
     }
 
     return result
+  }
+
+  getFilLoop (qFil, obj, newResult)
+  {
+    let result = []
+
+    if (newResult) result = newResult
+
+    for (let a in obj.FILES)
+    {
+      result.push (this.getFilKeys (qFil, obj.FILES[a]))
+    }
+    
+    for (let z in obj.FOLDERS)
+    {      
+      this.getFilLoop (qFil, obj.FOLDERS[z], result)
+    }
+
+    return result
+  }
+
+  getFilKeys (qFil, obj)
+  {
+    let qFilKeys = []
+    let matchVals = []
+
+    
+    for (let keys in qFil)
+    {
+      qFilKeys.push (keys)
+    }
+
+    for (let index in qFilKeys)
+    {
+      for (let keys in obj)
+      {
+        if (qFilKeys[index] == keys && qFil[qFilKeys[index]] == obj[keys]) matchVals.push (obj[keys]);
+      }
+      
+    }
+
+    if (qFilKeys.length >= matchVals.length && matchVals.length >= 1) return obj;
+    else return null;
   }
 
   getFolder (qFol, vFol)
@@ -98,22 +192,6 @@ class STORAGE
       {
         if (res[index][index2] != null) result.push (res[index][index2]);
       }
-    }
-
-    return result
-  }
-
-  getFilLoop (qFol, obj, newResult)
-  {
-    let result = []
-
-    if (newResult) result = newResult
-    
-    for (let z in obj)
-    {
-      result.push (this.getFolKeys (qFol, obj[z]))
-
-      this.getFilLoop (qFol, obj[z].FILES, result)
     }
 
     return result
@@ -143,14 +221,14 @@ class STORAGE
     
     for (let keys in qFol)
     {
-      qFolKeys.push (keys.toUpperCase ())
+      qFolKeys.push (keys)
     }
 
     for (let index in qFolKeys)
     {    
       for (let keys in obj)
       {
-        if (qFolKeys[index] == keys && qFol[qFolKeys[index].toLowerCase ()] == obj[keys]) matchVals.push (obj[keys]);
+        if (qFolKeys[index] == keys && qFol[qFolKeys[index]] == obj[keys]) matchVals.push (obj[keys]);
       }
       
     }
@@ -181,7 +259,6 @@ class STORAGE
 
   getDirKeys (qDir, vDirIndi)
   {
-    
     let qDirKeys = []
     let vPassword = false
     let qPassword = false
@@ -191,24 +268,24 @@ class STORAGE
 
     for (let keys in qDir)
     {
-      qDirKeys.push (keys.toUpperCase ())
+      qDirKeys.push (keys)
     }
 
     for (let index in qDirKeys)
     {
-      if (qDirKeys[index].toUpperCase () == "PASSWORD") qPassword = true;
-      if (qDirKeys[index].toUpperCase () == "USERNAME") qUsername = true;
+      if (qDirKeys[index] == "PASSWORD") qPassword = true;
+      if (qDirKeys[index] == "USERNAME") qUsername = true;
       
       for (let keys in vDirIndi)
       {
-        if (keys.toUpperCase () == "PASSWORD") vPassword = true;
-        if (keys.toUpperCase () == "USERNAME") vUsername = true;
+        if (keys == "PASSWORD") vPassword = true;
+        if (keys == "USERNAME") vUsername = true;
 
-        if (qDirKeys[index] == keys && qDir[qDirKeys[index].toLowerCase ()] == vDirIndi[keys]) matchVals.push (vDirIndi[keys]);
+        if (qDirKeys[index] == keys && qDir[qDirKeys[index]] == vDirIndi[keys]) matchVals.push (vDirIndi[keys]);
       } 
     }
 
-    if (vPassword == qPassword && vUsername == qUsername && qDirKeys.length >= matchVals.length && matchVals.length >= 2) return vDirIndi;
+    if (vPassword == qPassword && vUsername == qUsername && qDirKeys.length >= matchVals.length && matchVals.length >= 3) return vDirIndi;
     else return null;
   }
 }

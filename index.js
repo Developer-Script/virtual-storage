@@ -23,19 +23,19 @@ const core = vs.query (
 {
   directORY :
   {
-    tag : "F:",
+    tAg : "C:",
     username : "Moon",
     password : "Clean.12"
   },
   folder :
   {
-    name : "fold",
-    root : "/"
+    name : "fold"
   },
   file :
   {
-    name : "index"
-  }
+    name : "file",
+  },
+  get : "Hello"
 })
 
 console.dir (core, {depth: 2})
