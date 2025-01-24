@@ -7,7 +7,7 @@ class FILE
   {
     if (path) this.map (path)
 
-    this.import ()
+    if (typeof (require(this.PATH)) == "function") this.CONTENT = require (this.PATH)
   }
 
   map (path)
@@ -17,26 +17,14 @@ class FILE
     this.DIR = pth.parse (path).dir
     this.ROOT = pth.parse (path).root
     this.EXT = pth.parse(path).ext
-    this.PATH = path
+    this.PATH = `${this.DIR}/${this.BASE}`
     this.SIZE = fs.lstatSync (path).size
   }
 
-  import ()
+  getContent (path)
   {
-    if (this.EXT == ".json") 
-    {
-      this.CONTENT = this.getContent 
-    }
-
-    if (this.EXT == ".js") 
-    {
-      this.CONTENT = this.getContent
-    }
-  }
-
-  getContent ()
-  {
-    return require (`"${this.PATH}"`)
+    console.log (path)
+    return require (`"${path}"`)
   }
 }
 module.exports = FILE

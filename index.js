@@ -31,7 +31,7 @@ const core = vs.query (
   {
     ext : ".js"
   },
-  get : ['name', 'content', 'dir', 'root']
+  //get : ['content','name', ]
 })
 
 console.dir (core, {depth: 5})
